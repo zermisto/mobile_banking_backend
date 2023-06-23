@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+
+    dev:
+        image: cosmtrek/air
+        working_dir: /root/app
+        volumes:
+            - .:/root/app
+            - gopath:/go
+        tmpfs:
+            - /root/app/tmp:exec
+        tty: true
+        env_file:
+            - secret.env
+        ports:
+            - 3000:3000
+        restart: unless-stopped
+        entrypoint: bash
+
+volumes:
+    gopath:

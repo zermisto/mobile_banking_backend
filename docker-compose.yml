@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+    mb_backend:
+        deploy:
+            replicas: 1
+        build: .
+        ports:
+            - 3001:3000
+        env_file:
+            - secret.env

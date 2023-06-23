@@ -1,0 +1,50 @@
+datasource db {
+    provider          = "postgresql"
+    url               = "postgres://rdezctaa:ZPe675gCXgGBUrUJgS5YE3qfEbkogwKz@otto.db.elephantsql.com/rdezctaa?schema=OAT&connection_limit=1&application_name=mb-backend"
+    shadowDatabaseUrl = "postgres://rdezctaa:ZPe675gCXgGBUrUJgS5YE3qfEbkogwKz@otto.db.elephantsql.com/rdezctaa?schema=shadow"
+}
+
+generator db {
+    provider = "go run github.com/prisma/prisma-client-go"
+}
+
+model Parent {
+    id         String    @id @default(cuid())
+    create_at  DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    Student    Student[]
+    email      String    @unique
+}
+
+model Student {
+    id         String    @id
+    create_at  DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    GPA        String?
+    Credits    String?
+    first_name String
+    last_name  String
+    Class      String?
+    Email      String?
+    Phone      String?
+    Address    String?
+    parent     Parent    @relation(fields: [parent_id], references: [id])
+    parent_id  String
+    Payment    Payment[]
+}
+
+model Payment {
+    id           String    @id @default(cuid())
+    create_at    DateTime  @default(now())
+    updated_at   DateTime  @updatedAt
+    student      Student   @relation(fields: [student_id], references: [id])
+    student_id   String
+    Amount       Float
+    Year         String
+    Semester     Int
+    Paid         Boolean   @default(false)
+    payment_date DateTime?
+    payment_method String?
+
+    @@unique([student_id, Semester, Year])
+}
